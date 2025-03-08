@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Dia Mulher ❤</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffe4e1;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        h1 {
+            color: #d63384;
+            margin-top: 5vh;
+        }
+        .hidden {
+            display: none;
+        }
+        .msg {
+            font-size: 22px;
+            color: #444;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #d63384;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            position: absolute;
+            left: 50%;
+            top: 55%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease-in-out;
+        }
+        button:hover {
+            background-color: #c2185b;
+        }
+        .hearts {
+            font-size: 35px;
+            color: red;
+            position: absolute;
+            animation: floatUp 6s linear infinite;
+            opacity: 0;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(0.8) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(-100vh) scale(1.5) rotate(-10deg); }
+        }
+        #surprise img {
+            width: 80%;
+            max-width: 250px;
+            border-radius: 10px;
+            margin-top: 20px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+        }
+        .hide-on-click {
+            transition: opacity 0.5s ease-in-out;
+        }
+        #instruction {
+            margin-top: 10px;
+            font-size: 18px;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+    <h1>Feliz Dia da Mulher!🩷</h1>
+    <p id="instruction" class="hide-on-click">Se acertar o botão, ganha uma surpresa!</p>
+
+    <button id="trickButton">Clique Aqui</button>
+
+    <div id="surprise" class="hidden">
+        <img src="./images.jpeg" alt="Imagem Romântica">
+        <p class="msg">Parabéns! Você ganhou um vale-beijo sem data de validade!</p>
+        <audio id="loveSong" src="./luanmp3_6DTydf54.mp3"></audio>
+    </div>
+
+    <script>
+        let button = document.getElementById("trickButton");
+        let audio = document.getElementById("loveSong");
+        let surprise = document.getElementById("surprise");
+        let message = document.querySelector(".msg");
+        let image = document.querySelector("#surprise img");
+        let instruction = document.getElementById("instruction");
+        let attempts = 0;
+        let maxAttempts = 12;
+
+        function moveButton() {
+            if (attempts >= maxAttempts) return;
+            
+            let buttonWidth = button.offsetWidth;
+            let buttonHeight = button.offsetHeight;
+
+            let screenWidth = window.innerWidth - buttonWidth;
+            let screenHeight = window.innerHeight - buttonHeight;
+
+            let newX = Math.random() * screenWidth;
+            let newY = Math.random() * screenHeight;
+
+            // Evita que o botão encoste nas bordas
+            let padding = 10; // Margem de segurança
+            newX = Math.max(padding, Math.min(newX, screenWidth - padding));
+            newY = Math.max(padding, Math.min(newY, screenHeight - padding));
+
+            button.style.left = `${newX}px`;
+            button.style.top = `${newY}px`;
+
+            attempts++;
+        }
+
+        function createHeart() {
+            let heart = document.createElement("div");
+            heart.classList.add("hearts");
+            heart.innerHTML = "❤";
+            document.body.appendChild(heart);
+            
+            let startX = Math.random() * window.innerWidth;
+            let duration = Math.random() * 5 + 3;
+            heart.style.left = `${startX}px`;
+            heart.style.bottom = "0";
+            heart.style.animationDuration = `${duration}s`;
+            
+            setTimeout(() => heart.remove(), duration * 1000);
+        }
+
+        setInterval(createHeart, 250);
+
+        function preventClick(event) {
+            if (attempts < maxAttempts) {
+                event.preventDefault();
+                moveButton();
+            }
+        }
+
+        button.addEventListener("mouseover", moveButton);
+        button.addEventListener("touchstart", preventClick, { passive: false });
+        button.addEventListener("click", function() {
+            if (attempts < maxAttempts) return;
+            surprise.classList.remove("hidden");
+            button.style.display = "none";
+            message.style.opacity = "1";
+            message.style.transform = "translateY(0)";
+            image.style.opacity = "1";
+            image.style.transform = "scale(1)";
+            instruction.style.opacity = "0";
+            setTimeout(() => instruction.style.display = "none", 500);
+            audio.play().catch(error => console.log("Erro ao tocar áudio:", error));
+        });
+    </script>
+</body>
+</html>
+
+
