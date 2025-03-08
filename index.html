@@ -87,6 +87,18 @@
             transition: opacity 1s ease-in-out, transform 1s ease-in-out;
         }
 
+        #playAudio {
+            margin-top: 20px;
+            display: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #ff4081;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -99,11 +111,13 @@
         <img src="./images.jpeg" alt="Imagem Romântica">
         <p class="msg">Parabéns! Você ganhou um vale-beijo sem data de validade!</p>
         <audio id="loveSong" src="./luanmp3_6DTydf54.mp3"></audio>
+        <button id="playAudio">🎵 Tocar Música</button>
     </div>
 
     <script>
         let button = document.getElementById("trickButton");
         let audio = document.getElementById("loveSong");
+        let playAudioBtn = document.getElementById("playAudio");
         let surprise = document.getElementById("surprise");
         let message = document.querySelector(".msg");
         let image = document.querySelector("#surprise img");
@@ -127,9 +141,7 @@
             newX = Math.max(10, Math.min(newX, screenWidth));
             newY = Math.max(10, Math.min(newY, screenHeight));
 
-            button.style.left = `${newX}px`;
-            button.style.top = `${newY}px`;
-
+            button.style.transform = `translate(${newX}px, ${newY}px)`;
             attempts++;
         }
 
@@ -157,8 +169,12 @@
             }
         }
 
+        // Evento para PC (mouse)
         button.addEventListener("mouseover", moveButton);
+
+        // Evento para Mobile (toque)
         button.addEventListener("touchstart", preventClick, { passive: false });
+
         button.addEventListener("click", function() {
             if (attempts < maxAttempts) return;
             surprise.classList.remove("hidden");
@@ -169,10 +185,17 @@
             image.style.transform = "scale(1)";
             instruction.style.opacity = "0";
             setTimeout(() => instruction.style.display = "none", 500);
-            audio.play().catch(error => console.log("Erro ao tocar áudio:", error));
+
+            // Tentativa de autoplay
+            audio.play().catch(() => {
+                console.log("Autoplay bloqueado, mostrando botão de reprodução.");
+                playAudioBtn.style.display = "block";
+            });
         });
-    </script>
-</body>
-</html>
+
+        // Botão de tocar música manualmente
+        playAudioBtn.addEventListener("click", function() {
+            audio.pla
+
 
 
